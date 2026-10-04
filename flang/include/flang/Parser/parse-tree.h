@@ -454,7 +454,16 @@ struct DeclarationConstruct {
 // kind of declaration-construct will be parsed into the implicit-part,
 // even if there are no IMPLICIT statements.
 struct SpecificationPart {
-  TUPLE_CLASS_BOILERPLATE(SpecificationPart);
+  template <typename... Ts, typename = common::NoLvalue<Ts...>>
+  SpecificationPart(Ts &&...args) : t(std::move(args)...) {}
+  using TupleTrait = std::true_type;
+  SpecificationPart(SpecificationPart &&);
+  SpecificationPart &operator=(SpecificationPart &&);
+  SpecificationPart(const SpecificationPart &) = delete;
+  SpecificationPart &operator=(const SpecificationPart &) = delete;
+  SpecificationPart() = delete;
+  ~SpecificationPart();
+
   std::tuple<std::list<OpenACCDeclarativeConstruct>,
       std::list<OpenMPDeclarativeConstruct>,
       std::list<common::Indirection<CompilerDirective>>,
@@ -3649,6 +3658,9 @@ struct OmpObjectList {
 
 struct OmpStylizedDeclaration {
   COPY_AND_ASSIGN_BOILERPLATE(OmpStylizedDeclaration);
+  OmpStylizedDeclaration(
+      common::Reference<const OmpTypeName> type, EntityDecl &&var)
+      : type(type), var(std::move(var)) {}
   // Since "Reference" isn't handled by parse-tree-visitor, add EmptyTrait,
   // and visit the members by hand when needed.
   using EmptyTrait = std::true_type;
@@ -4601,7 +4613,16 @@ struct OmpContainsClause {
 // apply-clause ->
 //    APPLY( [loop-modifier :] directive-specification-list )
 struct OmpApplyClause {
-  TUPLE_CLASS_BOILERPLATE(OmpApplyClause);
+  template <typename... Ts, typename = common::NoLvalue<Ts...>>
+  OmpApplyClause(Ts &&...args) : t(std::move(args)...) {}
+  using TupleTrait = std::true_type;
+  OmpApplyClause(OmpApplyClause &&);
+  OmpApplyClause &operator=(OmpApplyClause &&);
+  OmpApplyClause(const OmpApplyClause &) = delete;
+  OmpApplyClause &operator=(const OmpApplyClause &) = delete;
+  OmpApplyClause() = delete;
+  ~OmpApplyClause();
+
   MODIFIER_BOILERPLATE(OmpLoopModifier);
   std::tuple<MODIFIERS(), std::list<OmpDirectiveSpecification>> t;
 };
@@ -6036,6 +6057,14 @@ struct CUFKernelDoConstruct {
   };
   std::tuple<Directive, std::optional<DoConstruct>> t;
 };
+
+inline SpecificationPart::SpecificationPart(SpecificationPart &&) = default;
+inline SpecificationPart &SpecificationPart::operator=(SpecificationPart &&) = default;
+inline SpecificationPart::~SpecificationPart() = default;
+
+inline OmpApplyClause::OmpApplyClause(OmpApplyClause &&) = default;
+inline OmpApplyClause &OmpApplyClause::operator=(OmpApplyClause &&) = default;
+inline OmpApplyClause::~OmpApplyClause() = default;
 
 } // namespace Fortran::parser
 #endif // FORTRAN_PARSER_PARSE_TREE_H_
