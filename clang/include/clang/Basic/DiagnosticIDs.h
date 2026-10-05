@@ -33,43 +33,40 @@ namespace diag {
 enum class Group;
 
 // Size of each of the diagnostic categories.
-enum {
-  DIAG_SIZE_COMMON = 300,
-  DIAG_SIZE_DRIVER = 400,
-  DIAG_SIZE_FRONTEND = 300,
-  DIAG_SIZE_CODEGEN = 100,
-  DIAG_SIZE_SERIALIZATION = 120,
-  DIAG_SIZE_LEX = 500,
-  DIAG_SIZE_PARSE = 800,
-  DIAG_SIZE_AST = 300,
-  DIAG_SIZE_COMMENT = 100,
-  DIAG_SIZE_CROSSTU = 100,
-  DIAG_SIZE_SEMA = 6000,
-  DIAG_SIZE_ANALYSIS = 100,
-  DIAG_SIZE_REFACTORING = 1000,
-  DIAG_SIZE_INSTALLAPI = 100,
-  DIAG_SIZE_TRAP = 100,
-};
+constexpr int DIAG_SIZE_COMMON = 300;
+constexpr int DIAG_SIZE_DRIVER = 400;
+constexpr int DIAG_SIZE_FRONTEND = 300;
+constexpr int DIAG_SIZE_CODEGEN = 100;
+constexpr int DIAG_SIZE_SERIALIZATION = 120;
+constexpr int DIAG_SIZE_LEX = 500;
+constexpr int DIAG_SIZE_PARSE = 800;
+constexpr int DIAG_SIZE_AST = 300;
+constexpr int DIAG_SIZE_COMMENT = 100;
+constexpr int DIAG_SIZE_CROSSTU = 100;
+constexpr int DIAG_SIZE_SEMA = 6000;
+constexpr int DIAG_SIZE_ANALYSIS = 100;
+constexpr int DIAG_SIZE_REFACTORING = 1000;
+constexpr int DIAG_SIZE_INSTALLAPI = 100;
+constexpr int DIAG_SIZE_TRAP = 100;
+
 // Start position for diagnostics.
 // clang-format off
-enum {
-  DIAG_START_COMMON        =                          0,
-  DIAG_START_DRIVER        = DIAG_START_COMMON        + static_cast<int>(DIAG_SIZE_COMMON),
-  DIAG_START_FRONTEND      = DIAG_START_DRIVER        + static_cast<int>(DIAG_SIZE_DRIVER),
-  DIAG_START_CODEGEN       = DIAG_START_FRONTEND      + static_cast<int>(DIAG_SIZE_FRONTEND),
-  DIAG_START_SERIALIZATION = DIAG_START_CODEGEN       + static_cast<int>(DIAG_SIZE_CODEGEN),
-  DIAG_START_LEX           = DIAG_START_SERIALIZATION + static_cast<int>(DIAG_SIZE_SERIALIZATION),
-  DIAG_START_PARSE         = DIAG_START_LEX           + static_cast<int>(DIAG_SIZE_LEX),
-  DIAG_START_AST           = DIAG_START_PARSE         + static_cast<int>(DIAG_SIZE_PARSE),
-  DIAG_START_COMMENT       = DIAG_START_AST           + static_cast<int>(DIAG_SIZE_AST),
-  DIAG_START_CROSSTU       = DIAG_START_COMMENT       + static_cast<int>(DIAG_SIZE_COMMENT),
-  DIAG_START_SEMA          = DIAG_START_CROSSTU       + static_cast<int>(DIAG_SIZE_CROSSTU),
-  DIAG_START_ANALYSIS      = DIAG_START_SEMA          + static_cast<int>(DIAG_SIZE_SEMA),
-  DIAG_START_REFACTORING   = DIAG_START_ANALYSIS      + static_cast<int>(DIAG_SIZE_ANALYSIS),
-  DIAG_START_INSTALLAPI    = DIAG_START_REFACTORING   + static_cast<int>(DIAG_SIZE_REFACTORING),
-  DIAG_START_TRAP          = DIAG_START_INSTALLAPI    + static_cast<int>(DIAG_SIZE_INSTALLAPI),
-  DIAG_UPPER_LIMIT         = DIAG_START_TRAP          + static_cast<int>(DIAG_SIZE_TRAP)
-};
+constexpr int DIAG_START_COMMON        = 0;
+constexpr int DIAG_START_DRIVER        = DIAG_START_COMMON        + DIAG_SIZE_COMMON;
+constexpr int DIAG_START_FRONTEND      = DIAG_START_DRIVER        + DIAG_SIZE_DRIVER;
+constexpr int DIAG_START_CODEGEN       = DIAG_START_FRONTEND      + DIAG_SIZE_FRONTEND;
+constexpr int DIAG_START_SERIALIZATION = DIAG_START_CODEGEN       + DIAG_SIZE_CODEGEN;
+constexpr int DIAG_START_LEX           = DIAG_START_SERIALIZATION + DIAG_SIZE_SERIALIZATION;
+constexpr int DIAG_START_PARSE         = DIAG_START_LEX           + DIAG_SIZE_LEX;
+constexpr int DIAG_START_AST           = DIAG_START_PARSE         + DIAG_SIZE_PARSE;
+constexpr int DIAG_START_COMMENT       = DIAG_START_AST           + DIAG_SIZE_AST;
+constexpr int DIAG_START_CROSSTU       = DIAG_START_COMMENT       + DIAG_SIZE_COMMENT;
+constexpr int DIAG_START_SEMA          = DIAG_START_CROSSTU       + DIAG_SIZE_CROSSTU;
+constexpr int DIAG_START_ANALYSIS      = DIAG_START_SEMA          + DIAG_SIZE_SEMA;
+constexpr int DIAG_START_REFACTORING   = DIAG_START_ANALYSIS      + DIAG_SIZE_ANALYSIS;
+constexpr int DIAG_START_INSTALLAPI    = DIAG_START_REFACTORING   + DIAG_SIZE_REFACTORING;
+constexpr int DIAG_START_TRAP          = DIAG_START_INSTALLAPI    + DIAG_SIZE_INSTALLAPI;
+constexpr int DIAG_UPPER_LIMIT         = DIAG_START_TRAP          + DIAG_SIZE_TRAP;
 // clang-format on
 
 class CustomDiagInfo;
