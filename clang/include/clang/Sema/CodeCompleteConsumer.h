@@ -50,98 +50,35 @@ class UsingShadowDecl;
 
 /// Default priority values for code-completion results based
 /// on their kind.
-enum {
-  /// Priority for the next initialization in a constructor initializer
-  /// list.
-  CCP_NextInitializer = 7,
-
-  /// Priority for an enumeration constant inside a switch whose
-  /// condition is of the enumeration type.
-  CCP_EnumInCase = 7,
-
-  /// Priority for a send-to-super completion.
-  CCP_SuperCompletion = 20,
-
-  /// Priority for a declaration that is in the local scope.
-  CCP_LocalDeclaration = 34,
-
-  /// Priority for a member declaration found from the current
-  /// method or member function.
-  CCP_MemberDeclaration = 35,
-
-  /// Priority for a language keyword (that isn't any of the other
-  /// categories).
-  CCP_Keyword = 40,
-
-  /// Priority for a code pattern.
-  CCP_CodePattern = 40,
-
-  /// Priority for a non-type declaration.
-  CCP_Declaration = 50,
-
-  /// Priority for a type.
-  CCP_Type = CCP_Declaration,
-
-  /// Priority for a constant value (e.g., enumerator).
-  CCP_Constant = 65,
-
-  /// Priority for a preprocessor macro.
-  CCP_Macro = 70,
-
-  /// Priority for a nested-name-specifier.
-  CCP_NestedNameSpecifier = 75,
-
-  /// Priority for a result that isn't likely to be what the user wants,
-  /// but is included for completeness.
-  CCP_Unlikely = 80,
-
-  /// Priority for the Objective-C "_cmd" implicit parameter.
-  CCP_ObjC_cmd = CCP_Unlikely
-};
+constexpr unsigned CCP_NextInitializer = 7;
+constexpr unsigned CCP_EnumInCase = 7;
+constexpr unsigned CCP_SuperCompletion = 20;
+constexpr unsigned CCP_LocalDeclaration = 34;
+constexpr unsigned CCP_MemberDeclaration = 35;
+constexpr unsigned CCP_Keyword = 40;
+constexpr unsigned CCP_CodePattern = 40;
+constexpr unsigned CCP_Declaration = 50;
+constexpr unsigned CCP_Type = CCP_Declaration;
+constexpr unsigned CCP_Constant = 65;
+constexpr unsigned CCP_Macro = 70;
+constexpr unsigned CCP_NestedNameSpecifier = 75;
+constexpr unsigned CCP_Unlikely = 80;
+constexpr unsigned CCP_ObjC_cmd = CCP_Unlikely;
 
 /// Priority value deltas that are added to code-completion results
 /// based on the context of the result.
-enum {
-  /// The result is in a base class.
-  CCD_InBaseClass = 2,
-
-  /// The result is a C++ non-static member function whose qualifiers
-  /// exactly match the object type on which the member function can be called.
-  CCD_ObjectQualifierMatch = -1,
-
-  /// The selector of the given message exactly matches the selector
-  /// of the current method, which might imply that some kind of delegation
-  /// is occurring.
-  CCD_SelectorMatch = -3,
-
-  /// Adjustment to the "bool" type in Objective-C, where the typedef
-  /// "BOOL" is preferred.
-  CCD_bool_in_ObjC = 1,
-
-  /// Adjustment for KVC code pattern priorities when it doesn't look
-  /// like the
-  CCD_ProbablyNotObjCCollection = 15,
-
-  /// An Objective-C method being used as a property.
-  CCD_MethodAsProperty = 2,
-
-  /// An Objective-C block property completed as a setter with a
-  /// block placeholder.
-  CCD_BlockPropertySetter = 3
-};
+constexpr int CCD_InBaseClass = 2;
+constexpr int CCD_ObjectQualifierMatch = -1;
+constexpr int CCD_SelectorMatch = -3;
+constexpr int CCD_bool_in_ObjC = 1;
+constexpr int CCD_ProbablyNotObjCCollection = 15;
+constexpr int CCD_MethodAsProperty = 2;
+constexpr int CCD_BlockPropertySetter = 3;
 
 /// Priority value factors by which we will divide or multiply the
 /// priority of a code-completion result.
-enum {
-  /// Divide by this factor when a code-completion result's type exactly
-  /// matches the type we expect.
-  CCF_ExactTypeMatch = 4,
-
-  /// Divide by this factor when a code-completion result's type is
-  /// similar to the type we expect (e.g., both arithmetic types, both
-  /// Objective-C object pointer types).
-  CCF_SimilarTypeMatch = 2
-};
+constexpr unsigned CCF_ExactTypeMatch = 4;
+constexpr unsigned CCF_SimilarTypeMatch = 2;
 
 /// A simplified classification of types used when determining
 /// "similar" types for code completion.
