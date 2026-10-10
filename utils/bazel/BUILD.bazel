@@ -9,3 +9,15 @@ bzl_library(
     srcs = ["configure.bzl"],
     visibility = ["//visibility:public"],
 )
+
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "twine_bench",
+    srcs = ["twine_bench.cpp"],
+    deps = [
+        "@google_benchmark//:benchmark",
+        "@google_benchmark//:benchmark_main",
+        "@llvm-project//llvm:Support",
+    ],
+)

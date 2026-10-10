@@ -33,6 +33,14 @@ bazel_dep(name = "nanobind", version = "2.12.0.bcr.1")
 bazel_dep(name = "libpfm", version = "4.13.0", repo_name = "pfm")
 bazel_dep(name = "vulkan_headers", version = "1.4.349")
 bazel_dep(name = "xz", version = "5.4.5.bcr.9", repo_name = "llvm_xz")
+bazel_dep(name = "rules_foreign_cc", version = "0.14.0")
+bazel_dep(name = "google_benchmark", version = "1.9.1")
+single_version_override(
+    module_name = "google_benchmark",
+    patch_cmds = [
+        "sed -i '1s/^/load(\"@rules_cc\\/\\/cc:defs.bzl\", \"cc_library\", \"cc_test\", \"cc_binary\")\\n/' BUILD.bazel",
+    ],
+)
 
 # Old version brought in transitively that uses transitive includes newer libc++ pruned
 bazel_dep(name = "rules_cc_autoconf", version = "0.24.0", repo_name = None)
