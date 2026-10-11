@@ -369,24 +369,6 @@ public:
     assert(isValid() && "Invalid twine!");
   }
 
-  /// Construct as the concatenation of an std::string and a StringRef.
-  /*implicit*/ Twine(const std::string &LHS, StringRef RHS)
-      : LHSKind(StdStringKind), RHSKind(PtrAndLengthKind) {
-    this->LHS.stdString = &LHS;
-    this->RHS.ptrAndLength.ptr = RHS.data();
-    this->RHS.ptrAndLength.length = RHS.size();
-    assert(isValid() && "Invalid twine!");
-  }
-
-  /// Construct as the concatenation of a StringRef and an std::string.
-  /*implicit*/ Twine(StringRef LHS, const std::string &RHS)
-      : LHSKind(PtrAndLengthKind), RHSKind(StdStringKind) {
-    this->LHS.ptrAndLength.ptr = LHS.data();
-    this->LHS.ptrAndLength.length = LHS.size();
-    this->RHS.stdString = &RHS;
-    assert(isValid() && "Invalid twine!");
-  }
-
   /// Since the intended use of twines is as temporary objects, assignments
   /// when concatenating might cause undefined behavior or stack corruptions
   Twine &operator=(const Twine &) = delete;
@@ -556,25 +538,6 @@ inline Twine operator+(const char *LHS, StringRef RHS) {
 /// concat().
 
 inline Twine operator+(StringRef LHS, const char *RHS) {
-  return Twine(LHS, RHS);
-}
-
-/// Additional overload to guarantee simplified codegen; this is equivalent to
-/// concat().
-
-inline Twine operator+(const std::string &LHS, StringRef RHS) {
-  return Twine(LHS, RHS);
-}
-
-inline Twine operator+(std::string &&LHS, StringRef RHS) {
-  return Twine(LHS, RHS);
-}
-
-inline Twine operator+(StringRef LHS, const std::string &RHS) {
-  return Twine(LHS, RHS);
-}
-
-inline Twine operator+(StringRef LHS, std::string &&RHS) {
   return Twine(LHS, RHS);
 }
 
