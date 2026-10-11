@@ -161,7 +161,7 @@ std::string InputSection::getSourceLocation(uint64_t off) const {
     std::string lineStr = (":" + Twine(line)).str();
     if (filename == path)
       return filename + lineStr;
-    return (filename + lineStr + " (" + path + lineStr + ")").str();
+    return (Twine(filename) + lineStr + " (" + path + lineStr + ")").str();
   };
 
   // First, look up a function for a given offset.
@@ -411,5 +411,6 @@ bool macho::isGccExceptTabSection(const InputSection *isec) {
 }
 
 std::string lld::toString(const InputSection *isec) {
-  return (toString(isec->getFile()) + ":(" + isec->getName() + ")").str();
+  return (Twine(toString(isec->getFile())) + ":(" + isec->getName() + ")")
+      .str();
 }

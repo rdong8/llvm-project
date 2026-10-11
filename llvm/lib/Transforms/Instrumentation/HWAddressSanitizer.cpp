@@ -616,20 +616,20 @@ void HWAddressSanitizer::initializeCallbacks(Module &M) {
     const std::string TypeStr = AccessIsWrite ? "store" : "load";
     const std::string EndingStr = Recover ? "_noabort" : "";
 
-    HwasanMemoryAccessCallbackSized[AccessIsWrite] =
-        M.getOrInsertFunction((Opts.hwasan_memory_access_callback_prefix +
-                               TypeStr + "N" + MatchAllStr + EndingStr)
-                                  .str(),
-                              HwasanMemoryAccessCallbackSizedFnTy);
+    HwasanMemoryAccessCallbackSized[AccessIsWrite] = M.getOrInsertFunction(
+        (Twine(Opts.hwasan_memory_access_callback_prefix) + TypeStr + "N" +
+         MatchAllStr + EndingStr)
+            .str(),
+        HwasanMemoryAccessCallbackSizedFnTy);
 
     for (size_t AccessSizeIndex = 0; AccessSizeIndex < kNumberOfAccessSizes;
          AccessSizeIndex++) {
       HwasanMemoryAccessCallback[AccessIsWrite][AccessSizeIndex] =
-          M.getOrInsertFunction((Opts.hwasan_memory_access_callback_prefix +
-                                 TypeStr + itostr(1ULL << AccessSizeIndex) +
-                                 MatchAllStr + EndingStr)
-                                    .str(),
-                                HwasanMemoryAccessCallbackFnTy);
+          M.getOrInsertFunction(
+              (Twine(Opts.hwasan_memory_access_callback_prefix) + TypeStr +
+               itostr(1ULL << AccessSizeIndex) + MatchAllStr + EndingStr)
+                  .str(),
+              HwasanMemoryAccessCallbackFnTy);
     }
   }
 

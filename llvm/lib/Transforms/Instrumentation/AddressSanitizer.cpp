@@ -2702,8 +2702,8 @@ void AddressSanitizer::initializeCallbacks(const TargetLibraryInfo *TLI) {
 
       AsanMemoryAccessCallbackSized[AccessIsWrite][Exp] =
           Inserter.insertFunction(
-              (Opts.asan_memory_access_callback_prefix + ExpStr + TypeStr +
-               "N" + EndingStr)
+              (Twine(Opts.asan_memory_access_callback_prefix) + ExpStr +
+               TypeStr + "N" + EndingStr)
                   .str(),
               FunctionType::get(IRB.getVoidTy(), Args2, false), AL2);
 
@@ -2717,8 +2717,8 @@ void AddressSanitizer::initializeCallbacks(const TargetLibraryInfo *TLI) {
 
         AsanMemoryAccessCallback[AccessIsWrite][Exp][AccessSizeIndex] =
             Inserter.insertFunction(
-                (Opts.asan_memory_access_callback_prefix + ExpStr + Suffix +
-                 EndingStr)
+                (Twine(Opts.asan_memory_access_callback_prefix) + ExpStr +
+                 Suffix + EndingStr)
                     .str(),
                 FunctionType::get(IRB.getVoidTy(), Args1, false), AL1);
       }

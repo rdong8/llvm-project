@@ -19,6 +19,7 @@
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/ADT/StringRef.h"
+#include "llvm/ADT/Twine.h"
 #include "llvm/Analysis/MemoryBuiltins.h"
 #include "llvm/Analysis/TargetLibraryInfo.h"
 #include "llvm/Analysis/ValueTracking.h"
@@ -494,7 +495,8 @@ void MemProfiler::initializeCallbacks(Module &M) {
 
     SmallVector<Type *, 2> Args1{1, IntptrTy};
     MemProfMemoryAccessCallback[AccessIsWrite] = M.getOrInsertFunction(
-        (Opts.memprof_memory_access_callback_prefix + HistPrefix + TypeStr)
+        (Twine(Opts.memprof_memory_access_callback_prefix) + HistPrefix +
+         TypeStr)
             .str(),
         FunctionType::get(IRB.getVoidTy(), Args1, false));
   }
