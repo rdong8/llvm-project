@@ -962,6 +962,73 @@ template <> struct DenseMapInfo<StringRef, void> {
   static bool isEqual(StringRef LHS, StringRef RHS) { return LHS == RHS; }
 };
 
+/// Concatenate zero or more string-like objects into a std::string.
+///
+/// Operands must not alias each other.
+inline std::string concat() { return {}; }
+
+/// Concatenate a non-empty sequence of string-like objects into a std::string.
+///
+/// Operands must not alias each other.
+template <typename First, typename... Rest,
+          std::enable_if_t<std::is_constructible_v<StringRef, First> &&
+                               (std::is_convertible_v<Rest, StringRef> && ...),
+                           int> = 0>
+[[nodiscard]]
+inline std::string concat(First &&FirstArg, Rest const &...RestArgs) {
+  auto constexpr CanStealFirst =
+      std::is_rvalue_reference_v<First &&> &&
+      std::is_same_v<std::remove_reference_t<First>, std::string>;
+
+  auto const TotalSize =
+      (StringRef{FirstArg}.size() + ... + StringRef{RestArgs}.size());
+
+  std::string Result;
+
+#if defined(__cpp_lib_string_resize_and_overwrite) &&                          \
+    __cpp_lib_string_resize_and_overwrite >= 202110L
+  auto constexpr AppendOne = [](char *&Dest, StringRef Source) {
+    // Can't memcpy from nullptr
+    if (Source.empty()) [[unlikely]] {
+      return;
+    }
+
+    std::memcpy(Dest, Source.data(), Source.size());
+    Dest += Source.size();
+  };
+
+  std::size_t OrigSize{0};
+
+  if constexpr (CanStealFirst) {
+    OrigSize = FirstArg.size();
+    Result = std::move(FirstArg);
+  }
+
+  Result.resize_and_overwrite(TotalSize, [&](char *Buf, size_t) {
+    auto *Dest = Buf + OrigSize;
+
+    if constexpr (!CanStealFirst) {
+      AppendOne(Dest, FirstArg);
+    }
+
+    (AppendOne(Dest, RestArgs), ...);
+    return TotalSize;
+  });
+#else
+  if constexpr (CanStealFirst) {
+    Result = std::move(FirstArg);
+    Result.reserve(TotalSize);
+  } else {
+    Result.reserve(TotalSize);
+    Result.append(StringRef{FirstArg});
+  }
+
+  (Result.append(StringRef{RestArgs}), ...);
+#endif
+
+  return Result;
+}
+
 } // end namespace llvm
 
 #endif // LLVM_ADT_STRINGREF_H

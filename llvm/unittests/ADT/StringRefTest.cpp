@@ -1274,6 +1274,41 @@ TEST(StringRefTest, NonEmptyOr) {
   EXPECT_EQ(populated, populated.nonEmptyOr("boo!"));
 }
 
+TEST(StringRefTest, Concat) {
+  // Empty overload
+  EXPECT_EQ(concat(), "");
+
+  // Single argument (various types)
+  EXPECT_EQ(concat("single"), "single");
+  EXPECT_EQ(concat(StringRef{"sr"}), "sr");
+  EXPECT_EQ(concat(std::string_view{"sv"}), "sv");
+
+  std::string S{"lvalue"};
+  EXPECT_EQ(concat(S), "lvalue");
+  EXPECT_EQ(S, "lvalue");
+
+  S = "rvalue";
+  EXPECT_EQ(concat(std::move(S)), "rvalue");
+
+  // Multiple arguments (mixed types)
+  S = "S";
+  StringRef A{"sr"};
+  std::string_view B{"sv"};
+  EXPECT_EQ(concat("prefix_", S, "_", A, "_", B, "_suffix"),
+            "prefix_S_sr_sv_suffix");
+
+  // Multiple arguments with rvalue first argument
+  S = "start";
+  EXPECT_EQ(concat(std::move(S), "_mid_", A, "_end"), "start_mid_sr_end");
+
+  std::string const ConstS{"const"};
+  EXPECT_EQ(concat(std::move(ConstS), "_suffix"), "const_suffix");
+
+  StringRef Empty;
+  EXPECT_EQ(concat(Empty, "", std::string{}, std::string_view{}), "");
+  EXPECT_EQ(concat("a", Empty, "b", "", "c"), "abc");
+}
+
 static_assert(std::is_trivially_copyable_v<StringRef>, "trivially copyable");
 
 } // end anonymous namespace
