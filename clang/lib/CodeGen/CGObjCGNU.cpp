@@ -188,7 +188,7 @@ protected:
   }
 
   std::string SymbolForProtocolRef(StringRef Name) {
-    return (ManglePublicSymbol("OBJC_REF_PROTOCOL_") + Name).str();
+    return llvm::concat(ManglePublicSymbol("OBJC_REF_PROTOCOL_"), Name);
   }
 
 
@@ -986,13 +986,13 @@ class CGObjCGNUstep2 : public CGObjCGNUstep {
 
   std::string SymbolForClassRef(StringRef Name, bool isWeak) {
     if (isWeak)
-      return (ManglePublicSymbol("OBJC_WEAK_REF_CLASS_") + Name).str();
+      return llvm::concat(ManglePublicSymbol("OBJC_WEAK_REF_CLASS_"), Name);
     else
-      return (ManglePublicSymbol("OBJC_REF_CLASS_") + Name).str();
+      return llvm::concat(ManglePublicSymbol("OBJC_REF_CLASS_"), Name);
   }
   /// Generate the name of a class symbol.
   std::string SymbolForClass(StringRef Name) {
-    return (ManglePublicSymbol("OBJC_CLASS_") + Name).str();
+    return llvm::concat(ManglePublicSymbol("OBJC_CLASS_"), Name);
   }
   void CallRuntimeFunction(CGBuilderTy &B, StringRef FunctionName,
       ArrayRef<llvm::Value*> Args) {
@@ -1496,8 +1496,8 @@ class CGObjCGNUstep2 : public CGObjCGNUstep {
   llvm::Constant *GetConstantSelector(Selector Sel,
                                       const std::string &TypeEncoding) override {
     std::string MangledTypes = GetSymbolNameForTypeEncoding(TypeEncoding);
-    auto SelVarName = (StringRef(".objc_selector_") + Sel.getAsString() + "_" +
-      MangledTypes).str();
+    auto SelVarName =
+        llvm::concat(".objc_selector_", Sel.getAsString(), "_", MangledTypes);
     if (auto *GV = TheModule.getNamedGlobal(SelVarName))
       return GV;
     ConstantInitBuilder builder(CGM);

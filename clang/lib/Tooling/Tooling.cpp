@@ -299,7 +299,7 @@ void addTargetAndModeForProgramName(std::vector<std::string> &CommandLine,
   }
   if (ShouldAddTarget) {
     CommandLine.insert(++CommandLine.begin(),
-                       (TargetOPT + TargetMode.TargetPrefix).str());
+                       llvm::concat(TargetOPT, TargetMode.TargetPrefix));
   }
 }
 

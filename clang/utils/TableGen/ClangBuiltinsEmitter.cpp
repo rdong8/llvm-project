@@ -479,8 +479,8 @@ void collectBuiltins(const Record *BuiltinRecord,
        zip(Templates.Substitution, Templates.Affix)) {
     for (StringRef Spelling :
          BuiltinRecord->getValueAsListOfStrings("Spellings")) {
-      auto FullSpelling =
-          (Templates.IsPrefix ? Affix + Spelling : Spelling + Affix).str();
+      auto FullSpelling = Templates.IsPrefix ? concat(Affix, Spelling)
+                                             : concat(Spelling, Affix);
       BuiltinType BT = BuiltinType::Builtin;
       if (BuiltinRecord->isSubClassOf("AtomicBuiltin")) {
         BT = BuiltinType::AtomicBuiltin;

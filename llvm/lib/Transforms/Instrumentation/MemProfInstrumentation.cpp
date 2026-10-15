@@ -489,23 +489,22 @@ void MemProfiler::initializeCallbacks(Module &M) {
   IRBuilder<> IRB(M);
 
   for (size_t AccessIsWrite = 0; AccessIsWrite <= 1; AccessIsWrite++) {
-    const std::string TypeStr = AccessIsWrite ? "store" : "load";
-    const std::string HistPrefix = Opts.memprof_histogram ? "hist_" : "";
+    const StringRef TypeStr = AccessIsWrite ? "store" : "load";
+    const StringRef HistPrefix = Opts.memprof_histogram ? "hist_" : "";
 
     SmallVector<Type *, 2> Args1{1, IntptrTy};
     MemProfMemoryAccessCallback[AccessIsWrite] = M.getOrInsertFunction(
-        (Opts.memprof_memory_access_callback_prefix + HistPrefix + TypeStr)
-            .str(),
+        concat(Opts.memprof_memory_access_callback_prefix, HistPrefix, TypeStr),
         FunctionType::get(IRB.getVoidTy(), Args1, false));
   }
   MemProfMemmove = M.getOrInsertFunction(
-      (Opts.memprof_memory_access_callback_prefix + "memmove").str(), PtrTy,
+      concat(Opts.memprof_memory_access_callback_prefix, "memmove"), PtrTy,
       PtrTy, PtrTy, IntptrTy);
   MemProfMemcpy = M.getOrInsertFunction(
-      (Opts.memprof_memory_access_callback_prefix + "memcpy").str(), PtrTy,
+      concat(Opts.memprof_memory_access_callback_prefix, "memcpy"), PtrTy,
       PtrTy, PtrTy, IntptrTy);
   MemProfMemset = M.getOrInsertFunction(
-      (Opts.memprof_memory_access_callback_prefix + "memset").str(), PtrTy,
+      concat(Opts.memprof_memory_access_callback_prefix, "memset"), PtrTy,
       PtrTy, IRB.getInt32Ty(), IntptrTy);
 }
 

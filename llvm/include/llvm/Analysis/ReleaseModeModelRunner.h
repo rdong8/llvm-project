@@ -123,7 +123,7 @@ private:
   void populateTensor(size_t Pos, const TensorSpec &Spec, StringRef Prefix,
                       bool &InputIsPresent) {
     const int Index =
-        CompiledModel->LookupArgIndex((Prefix + Spec.name()).str());
+        CompiledModel->LookupArgIndex(concat(Prefix, Spec.name()));
     void *Buffer = nullptr;
     InputIsPresent = Index >= 0;
     if (InputIsPresent) {

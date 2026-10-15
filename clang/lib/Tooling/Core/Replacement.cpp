@@ -387,13 +387,13 @@ public:
       StringRef TextRef = Text;
       StringRef Head = TextRef.substr(0, R.getOffset() + Delta - Offset);
       StringRef Tail = TextRef.substr(REnd - Offset);
-      Text = (Head + R.getReplacementText() + Tail).str();
+      Text = llvm::concat(Head, R.getReplacementText(), Tail);
       Delta += R.getReplacementText().size() - R.getLength();
     } else {
       unsigned End = Offset + Length;
       StringRef RText = R.getReplacementText();
       StringRef Tail = RText.substr(End - R.getOffset());
-      Text = (Text + Tail).str();
+      Text += Tail;
       if (R.getOffset() + RText.size() > End) {
         Length = R.getOffset() + R.getLength() - Offset;
         MergeSecond = true;

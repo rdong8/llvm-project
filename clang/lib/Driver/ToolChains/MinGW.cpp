@@ -564,11 +564,11 @@ toolchains::MinGW::MinGW(const Driver &D, const llvm::Triple &Triple,
     SubdirName = CandidateSubdir;
 
   getFilePaths().push_back(
-      (Base + SubdirName + llvm::sys::path::get_separator() + "lib").str());
+      llvm::concat(Base, SubdirName, llvm::sys::path::get_separator(), "lib"));
 
   // Gentoo
-  getFilePaths().push_back(
-      (Base + SubdirName + llvm::sys::path::get_separator() + "mingw/lib").str());
+  getFilePaths().push_back(llvm::concat(
+      Base, SubdirName, llvm::sys::path::get_separator(), "mingw/lib"));
 
   // Only include <base>/lib if we're not cross compiling (not even for
   // windows->windows to a different arch), or if the sysroot has been set
@@ -829,9 +829,8 @@ void toolchains::MinGW::AddClangCXXStdlibIncludeArgs(
 
   switch (GetCXXStdlibType(DriverArgs)) {
   case ToolChain::CST_Libcxx: {
-    std::string TargetDir = (Base + "include" + Slash + getTripleString() +
-                             Slash + "c++" + Slash + "v1")
-                                .str();
+    std::string TargetDir = llvm::concat(
+        Base, "include", Slash, getTripleString(), Slash, "c++", Slash, "v1");
     if (getDriver().getVFS().exists(TargetDir))
       addSystemInclude(DriverArgs, CC1Args, TargetDir);
     addSystemInclude(DriverArgs, CC1Args,

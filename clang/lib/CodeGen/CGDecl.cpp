@@ -1174,7 +1174,7 @@ Address CodeGenModule::createUnnamedGlobalFrom(const VarDecl &D,
     if (D.hasGlobalStorage())
       Name = getMangledName(&D).str() + ".const";
     else if (const DeclContext *DC = D.getParentFunctionOrMethod())
-      Name = ("__const." + FunctionName(DC) + "." + D.getName()).str();
+      Name = llvm::concat("__const.", FunctionName(DC), ".", D.getName());
     else
       llvm_unreachable("local variable has no parent function or method");
     llvm::GlobalVariable *GV = new llvm::GlobalVariable(

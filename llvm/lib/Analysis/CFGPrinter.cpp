@@ -61,8 +61,7 @@ static cl::opt<bool>
 static void writeCFGToDotFile(Function &F, BlockFrequencyInfo *BFI,
                               BranchProbabilityInfo *BPI, uint64_t MaxFreq,
                               bool CFGOnly = false) {
-  std::string Filename =
-      (CFGDotFilenamePrefix + "." + F.getName() + ".dot").str();
+  std::string Filename = concat(CFGDotFilenamePrefix, ".", F.getName(), ".dot");
   errs() << "Writing '" << Filename << "'...";
 
   std::error_code EC;
