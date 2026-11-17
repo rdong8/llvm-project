@@ -356,11 +356,10 @@ public:
     return 0;
   }
 
-  CLASS_BOILERPLATE(ProcedureRef)
+  ProcedureRef() = delete;
+  DECLARE_CONSTRUCTORS_AND_ASSIGNMENTS(ProcedureRef)
   ProcedureRef(ProcedureDesignator &&p, ActualArguments &&a,
-      bool hasAlternateReturns = false)
-      : proc_{std::move(p)}, arguments_{std::move(a)},
-        hasAlternateReturns_{hasAlternateReturns} {}
+      bool hasAlternateReturns = false);
   ~ProcedureRef();
   static void Deleter(ProcedureRef *);
 
@@ -371,7 +370,7 @@ public:
   // CALL subr <<< kernel launch >>> (...); not function
   Chevrons &chevrons() { return chevrons_; }
   const Chevrons &chevrons() const { return chevrons_; }
-  void set_chevrons(Chevrons &&chevrons) { chevrons_ = std::move(chevrons); }
+  void set_chevrons(Chevrons &&chevrons);
 
   std::optional<Expr<SubscriptInteger>> LEN() const;
   int Rank() const;
