@@ -173,7 +173,7 @@ MemProfilerPass::MemProfilerPass() = default;
 
 PreservedAnalyses MemProfilerPass::run(Function &F,
                                        AnalysisManager<Function> &AM) {
-  const InstrumentationOptions &Opts = InstrumentationOptions::Global;
+  const InstrumentationOptions &Opts = getInstrumentationOptions(F);
   assert((!Opts.memprof_histogram ||
           Opts.memprof_mapping_granularity == DefaultMemGranularity) &&
          "Memprof with histogram only supports default mapping granularity");
@@ -189,7 +189,8 @@ ModuleMemProfilerPass::ModuleMemProfilerPass() = default;
 PreservedAnalyses ModuleMemProfilerPass::run(Module &M,
                                              AnalysisManager<Module> &AM) {
 
-  ModuleMemProfiler Profiler(InstrumentationOptions::Global, M);
+  const InstrumentationOptions &Opts = getInstrumentationOptions(M);
+  ModuleMemProfiler Profiler(Opts, M);
   if (Profiler.instrumentModule(M))
     return PreservedAnalyses::none();
   return PreservedAnalyses::all();
@@ -343,6 +344,7 @@ void MemProfiler::instrumentMaskedLoadOrStore(const DataLayout &DL, Value *Mask,
     }
 
     IRBuilder<> IRB(InsertBefore);
+    IRB.disableGEPCanonicalization();
     InstrumentedAddress =
         IRB.CreateGEP(VTy, Addr, {Zero, ConstantInt::get(IntptrTy, Idx)});
     instrumentAddress(I, InsertBefore, InstrumentedAddress, IsWrite);
