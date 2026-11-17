@@ -65,8 +65,7 @@ class ClangFunctionCaller : public FunctionCaller {
     static char ID;
 
     ClangFunctionCallerHelper(ClangFunctionCaller &owner);
-
-    virtual ~ClangFunctionCallerHelper();
+    ~ClangFunctionCallerHelper() override;
 
     /// Return the object that the parser should use when resolving external
     /// values.  May be NULL if everything should be self-contained.
